@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# TODO: add set -uo pipefail.
+
+# Script was originally from: https://github.com/tidalcycles/Tidal/blob/master/doc/install-linux.sh
+#
+# Some modifications for me to work on my system.
+
 # This script installs tidal.
 # It will get all its dependencies and put
 # files into ~/tidal and a start script on the
@@ -16,6 +22,8 @@ sudo apt-get -y install build-essential libsndfile1-dev libsamplerate0-dev \
     liblo-dev libjack-jackd2-dev qjackctl jackd git \
     ghc zlib1g-dev cabal-install \
     emacs24 haskell-mode
+
+# TODO: Remove emacs from install.
 
 # install Dirt
 if [ -d "Dirt" ]; then

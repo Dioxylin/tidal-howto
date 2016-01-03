@@ -37,6 +37,13 @@ around with volume.
 
 <need to configure for realtime shit>
 
-<put instructions here for alsa loopback>
+So, alsa loopback's a thing.  Basically, when you use jack, especially as
+realtime priority, if you don't have another device to output to, you can't
+actually get sound output from most applications, because they use alsa.  The
+fix for this is found at:
+http://alsa.opensrc.org/Jack_and_Loopback_device_as_Alsa-to-Jack_bridge.
+
+I was able to just copy and paste the first file and make it work.  Your
+mileage may very, yes.
 
 <install tidal stuff here>

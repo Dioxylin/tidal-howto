@@ -1,0 +1,42 @@
+Quick lowdown on everything:
+
+Prefixing lines with # means execute these as root (via sudo, sudo -i, su,
+etc.), and $ means execute as user.
+
+ALSA is a thing that makes sound actually happen.  This is also known as a
+sound backend.
+
+PulseAudio is similar, but usually gets in the way for the setup we're going to
+go over.  I've disabled it completely, either by uninstalling it or disabling
+it at startup.
+
+Jack is a way for you to output audio from one program to input it into
+another.  It's really nifty once you get the hang of it, and really frustrating
+when you realize programs that should record sound don't recourd it via jack
+(audacity, obs-studio on ubuntu).
+
+Please note that there are many ways to set up this stuff.  This is my personal
+setup documented strictly for me and hopefully anyone who may find this useful.
+I can't guarantee that the steps will work for you.
+
+First, disable pulseaudio.  This is the safest way I've figured to go about
+things:
+
+	# echo "manual" > /etc/init/pulseaudio.override
+	# pulseaudio --kill
+	# apt-get autoremove pulseaudio # OPTIONAL
+
+The first line makes pulseadudio only available by starting it manually.  The
+third line is optional, and might break things for a while.
+
+So, now we need jack.  I also use qjackctl because it's easy mode.
+jack-capture for actually recording, and sometimes I use jack-mixer to mess
+around with volume.
+
+	# apt-get install jackd qjackctl jack-capture jack-mixer
+
+<need to configure for realtime shit>
+
+<put instructions here for alsa loopback>
+
+<install tidal stuff here>

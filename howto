@@ -8,12 +8,64 @@ sound backend.
 
 PulseAudio is similar, but usually gets in the way for the setup we're going to
 go over.  I've disabled it completely, either by uninstalling it or disabling
-it at startup.
+it at startup.  Details to disable it are below.
 
 Jack is a way for you to output audio from one program to input it into
 another.  It's really nifty once you get the hang of it, and really frustrating
-when you realize programs that should record sound don't recourd it via jack
+when you realize programs that should record sound don't record it via jack
 (audacity, obs-studio on ubuntu).
+
+So, what is dirt?  Dirt, from what I can tell, plays samples and does all sorts
+of goofy computery stuff that make it continue to play to the end of a sample
+so you can play other samples on top of them without clipping the audio short
+like more applications would probably do (since that is the simple thing to
+implement).  It's actually kinda nifty.
+
+Tidal is kind-of a domain-specific language for playing sounds by interfacing
+with dirt.  I say "kind-of", because it's just Haskell that's designed around
+being parse in a read-eval-print-loop (REPL) via ghc interactive shell.
+
+
+How I see sound on Linux
+
+The analogy I use for sound synthesis in my head is that you have a sound
+originator (source), the pipeline, modifiers on the pipeline, and the
+destination (which should be 'system' in qjackctl, which should output to
+speakers).  Some people call the destination a "sink". If there isn't a
+pipeline to the destination, no matter how loud the originator screams or the
+pipeline modifiers amplify the signal, you won't hear it.  Doing funky stuff
+like looping the sound can be weird, too.  Basically, the simple setup should
+be: Originator-->stuffs, no loops-->Destination.
+
+
+MIDI
+
+TODO: Understand MIDI well enough to give a rundown.  Basically, it's a series
+of 128 different signals for each channel that can be passed much like audio
+and control virtual instruments.  It doesn't make sound by itself, I think?
+Usually you would input it from an electronic piano keyboard attached via MIDI
+to your computer, and you would just use that signal.  It's much easier to
+compose music that way, but it also takes up a lot of space sometimes.
+
+TODO: Buy a cheap MIDI keyboard maybe not even capable of synthesizing.
+
+Basically you can do some MIDI output from tidal to make instruments do the
+things you want.
+
+
+Yoshimi input from tidal
+
+Launch yoshimi with -a.  My full command line is 'yoshimi -S -a' to restore the
+state.  This makes yoshimi accept midi input via alsa.
+
+When you set up MIDI with tidal (via midiproxy), you only get alsa sequencers
+from what I can tell.  I just connect my stuff to 'Midi Through Port-0' and
+then I can just connect that to yoshimi via qjackctl (under Connect->ALSA tab).
+This has the benefit of allowing you to connect to other midi devices as you
+want.
+
+
+Setup
 
 Please note that there are many ways to set up this stuff.  This is my personal
 setup documented strictly for me and hopefully anyone who may find this useful.
@@ -35,7 +87,25 @@ around with volume.
 
 	# apt-get install jackd qjackctl jack-capture jack-mixer
 
-<need to configure for realtime shit>
+
+Jack realtime
+
+Follow the instructions here: http://jackaudio.org/faq/linux_rt_config.html
+
+Ubuntu uses PAM, which makes realtime configuration easy.  Note: instead of
+logging out and back in, you can just su to yourself.  Any subprocess after the
+su'd shell will inherit the proper groups.  Better for people like me who hate
+to have to log out and back in.
+
+Basically you want realtime because you don't want to have audio sync issues,
+is my understanding.  What do you want?  SOUND!  When do you want it?  NOW.
+Although, realistically you're always going to have a slight delay.  Decent
+hardware can make this 20 ms or less.  You'll hardly notice.
+
+Also prevents xruns (where x is "over" or "under").
+
+
+Alsa loopback.
 
 So, alsa loopback's a thing.  Basically, when you use jack, especially as
 realtime priority, if you don't have another device to output to, you can't
@@ -44,6 +114,24 @@ fix for this is found at:
 http://alsa.opensrc.org/Jack_and_Loopback_device_as_Alsa-to-Jack_bridge.
 
 I was able to just copy and paste the first file and make it work.  Your
-mileage may very, yes.
+mileage may very, yes.  In a nutshell, you make it so that alsa can sink to
+loopbacks, i.e. devices that are its own source and destination.  Anything that
+leads there will be broadcast as output.  You can use jack to connect to these,
+and if you output the loopback devices to system, you get sound as if you
+didn't mess with your friendly Linux sound setup.  As a bonus, you can redirect
+the loopback devices to jack-aware applications, which is also fun.  Who
+wouldn't want to add stupid amounts of reverb to a youtube video?
 
 <install tidal stuff here>
+
+
+<install vim-tidal here because I have no desire toward emacs, bro>
+
+
+Synthesizer stuffs
+
+Not directly tidal related, but if you want to make samples, you'll want to
+familiarize yourself with synthesizers.  I use calfjackhost for modification of
+audio, yoshimi as a sound originator (software synthesizer), and sometimes
+bristol for another sound originator synthesizer.  If I want to control volume
+of a stream directly, I use jack_mixer.

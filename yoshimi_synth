@@ -1,0 +1,35 @@
+So, when I open up Yoshimi, I don't have any audio engineering experience.  I'm
+pretty much at a complete loss of what in the world makes a tone from an
+instrument sound like it does, and what makes a sine wave sound so boring.  So,
+I wanted to learn, and I can't find decent tutorials on it, but I want to get
+started now, dammit!
+
+So I took the general concepts of Learn Code the Hard Way
+(http://learncodethehardway.org/) in order to figure out audio synthesis.  As
+an aside, this also demonstrates the usefulness of how Learn Code the Hard Way
+basically applies to much more than coding.
+
+So, basically what I did to understand at least a little of what was going on
+with the synthesizer settings was:
+
+Find a simple synthesizer that only uses one synth (I used Bass 1 which only
+has ADDsynth).  Use it for one of the channels and put both left and right to
+one speaker.  My setup has a jack_mixer that was just passthrough to System,
+which I found easier to have so I could also connect it to japa to visualize
+the sound.
+
+Go to the menu Yoshimi and click "New Instance" (mine was named Yoshimi-1).
+
+Set up the new instance by selecting "Simple sound" and put that to the other speaker.
+
+Then I opened the synth that the bass had (ADDsynth) and the synth the simple
+sound had and started copying over the settings by hand and listening to how it
+would transform the sound.  After I found an interesting control to change the
+sound, I played around with it to see what sort of effects I could get with it.
+
+I continued until I got pretty much close enough with the bass sounds and could
+verify that they were similar visually.
+
+It won't teach me everything about making sounds, and I don't expect to be a
+wizard at any length, but people who start doing sound synthesis also probably
+didn't.
